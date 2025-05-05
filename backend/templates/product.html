@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        /* Basic styles if external CSS is not available */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .product-image {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .product-info h1 {
+            margin-top: 0;
+        }
+        .product-price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2a6496;
+            margin: 20px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #2a6496;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background: #1e4b75;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DES - Delivery Escrow System</h1>
+            <a href="/" class="btn btn-secondary">Back to Products</a>
+        </header>
+        
+        <main>
+            <div class="product-detail">
+                <div class="product-image-container">
+                    <img src="{{.Product.ImageURL}}" alt="{{.Product.Name}}" class="product-image">
+                </div>
+                <div class="product-info">
+                    <h1>{{.Product.Name}}</h1>
+                    <p>{{.Product.Description}}</p>
+                    <div class="product-price">${{.Product.Price}}</div>
+                    
+                    <div class="product-actions">
+                        <button class="btn" id="buy-now">Buy Now with Escrow</button>
+                        <button class="btn btn-secondary" id="add-to-cart">Add to Cart</button>
+                    </div>
+                    
+                    <div class="escrow-info" style="margin-top: 30px;">
+                        <h3>How Our Escrow System Works</h3>
+                        <ol>
+                            <li>You purchase the product and funds are held in escrow</li>
+                            <li>The seller ships your product</li>
+                            <li>You confirm receipt and the funds are released to the seller</li>
+                            <li>If there's an issue, our dispute resolution process protects both parties</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>&copy; 2023 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('buy-now').addEventListener('click', function() {
+            // In a real app, this would redirect to a checkout page
+            alert('Proceeding to checkout with escrow protection!');
+            // window.location.href = '/checkout/{{.Product.ID}}';
+        });
+        
+        document.getElementById('add-to-cart').addEventListener('click', function() {
+            // In a real app, this would add the product to a cart
+            alert('Product added to cart!');
+        });
+    </script>
+</body>
+</html>
