@@ -59,11 +59,55 @@
         .btn:hover {
             background: #1e4b75;
         }
+        /* Navigation styles */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2a6496;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #2a6496;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #f0f0f0;
+        }
+        .nav-links .btn {
+            color: white;
+        }
+        .nav-links .btn:hover {
+            background: #1e4b75;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="nav-container">
+                <a href="/" class="nav-logo">DES System</a>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/login" class="btn">Login</a>
+                    <a href="/register" class="btn">Register</a>
+                </div>
+            </div>
             <h1>Welcome to DES system</h1>
             <p>Secure your purchases with our delivery escrow service</p>
         </header>
