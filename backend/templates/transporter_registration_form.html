@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .form-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            display: {{if .Error}}block{{else}}none{{end}};
+        }
+        
+        .wallet-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #2a6496;
+        }
+        
+        .role-selector {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .role-selector a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .role-selector a.active {
+            background-color: #2a6496;
+            color: white;
+            border-color: #2a6496;
+        }
+        
+        .file-upload-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DES - Delivery Escrow System</h1>
+            <a href="/" class="btn btn-secondary">Back to Home</a>
+        </header>
+        
+        <main>
+            <h2>Register as a Transporter</h2>
+            
+            <div class="role-selector">
+                <a href="/register/buyer">Buyer</a>
+                <a href="/register/seller">Seller</a>
+                <a href="/register/transporter" class="active">Transporter</a>
+                <a href="/register/manufacturer">Manufacturer</a>
+            </div>
+            
+            <div class="form-container">
+                <form action="/register/transporter" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_card">National ID Card (Scanned Image)</label>
+                        <input type="file" id="id_card" name="id_card" accept="image/*" required>
+                        <p class="file-upload-info">Please upload a clear, legible scan or photo of your national ID card.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wallet">Nova Wallet Address</label>
+                        <input type="text" id="wallet" name="wallet" placeholder="e.g., 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vehicle_info">Vehicle Information</label>
+                        <textarea id="vehicle_info" name="vehicle_info" placeholder="Please provide details about your vehicle (type, model, year, license plate, etc.)" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    
+                    <div class="wallet-info">
+                        <h4>Why do we need your ID and wallet address?</h4>
+                        <p>Your ID is required to verify your identity and ensure the security of our delivery network. Your Nova wallet address is needed to process payments for completed deliveries through our blockchain-based escrow system.</p>
+                        <p>Don't have a Nova wallet? <a href="https://novawallet.io/" target="_blank">Create one here</a>.</p>
+                    </div>
+                    
+                    <div class="error-message">
+                        {{.Error}}
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button type="submit" class="btn">Register as Transporter</button>
+                        <p>Already have an account? <a href="/login">Login here</a></p>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>&copy; 2023 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Client-side validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            const walletAddress = document.getElementById('wallet').value;
+            if (!walletAddress || walletAddress.length < 48) {
+                e.preventDefault();
+                alert('Please enter a valid Nova wallet address');
+                return;
+            }
+            
+            // Validate file upload
+            const idCard = document.getElementById('id_card').files;
+            if (idCard.length === 0) {
+                e.preventDefault();
+                alert('Please upload your national ID card');
+                return;
+            }
+            
+            // Validate vehicle information
+            const vehicleInfo = document.getElementById('vehicle_info').value;
+            if (!vehicleInfo || vehicleInfo.trim().length < 10) {
+                e.preventDefault();
+                alert('Please provide detailed information about your vehicle');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
