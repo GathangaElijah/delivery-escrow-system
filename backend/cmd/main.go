@@ -1,13 +1,12 @@
 package main
 
 import (
+	"des/handlers"
 	"fmt"
 	"log"
 	"net/http"
 	"os/exec"
 	"runtime"
-
-	"des/handlers"
 )
 
 // openBrowser tries to open the URL in the default browser
@@ -39,9 +38,16 @@ func main() {
 
 	// Home page
 	mux.Handle("/", handlers.Index())
-
+	
 	// Product detail page
 	mux.Handle("/product/", handlers.GetProduct())
+	
+	// Authentication routes
+	mux.Handle("/register", handlers.Register())
+	mux.Handle("/register/buyer", handlers.RegisterBuyer())
+	mux.Handle("/register/seller", handlers.RegisterSeller())
+	mux.Handle("/register/transporter", handlers.RegisterTransporter())
+	mux.Handle("/login", handlers.Login())
 
 	// Define server address
 	addr := ":8080"
@@ -49,10 +55,7 @@ func main() {
 
 	// Print clickable link in terminal
 	fmt.Printf("Server starting at \033[34m\033[4m%s\033[0m\n", url)
-
-	// Optionally, automatically open browser
-	openBrowser(url)
-
+	
 	// Start the server
 	log.Printf("Starting server on %s", addr)
 	err := http.ListenAndServe(addr, mux)
