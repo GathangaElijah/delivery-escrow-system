@@ -152,7 +152,7 @@ mod delivery_escrow {
     #[cfg(test)]
     mod tests {
         use crate::delivery_escrow::DeliveryEscrow;
-        use ink_env::{self, DefaultEnvironment};
+        // use ink_env::{self, DefaultEnvironment};
         use ink_env::hash::{Blake2x256, HashOutput};
         type Hash = <DefaultEnvironment as ink_env::Environment>::Hash;
 
