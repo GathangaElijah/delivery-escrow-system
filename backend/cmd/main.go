@@ -1,12 +1,14 @@
 package main
 
 import (
-	"des/handlers"
 	"fmt"
 	"log"
 	"net/http"
 	"os/exec"
 	"runtime"
+	"strings"
+
+	"des/handlers"
 )
 
 // openBrowser tries to open the URL in the default browser
@@ -38,10 +40,10 @@ func main() {
 
 	// Home page
 	mux.Handle("/", handlers.Index())
-	
+
 	// Product detail page
 	mux.Handle("/product/", handlers.GetProduct())
-	
+
 	// Authentication routes
 	mux.Handle("/register", handlers.Register())
 	mux.Handle("/register/buyer", handlers.RegisterBuyer())
@@ -49,13 +51,29 @@ func main() {
 	mux.Handle("/register/transporter", handlers.RegisterTransporter())
 	mux.Handle("/login", handlers.Login())
 
+	// Seller dashboard routes
+	mux.Handle("/seller/dashboard", handlers.SellerDashboard())
+	mux.Handle("/seller/products/add", handlers.AddProduct())
+	mux.Handle("/seller/shipping/prepare", handlers.PrepareShipment())
+	mux.Handle("/seller/orders/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasSuffix(r.URL.Path, "/process") {
+			handlers.ProcessOrder().ServeHTTP(w, r)
+		} else if strings.HasSuffix(r.URL.Path, "/ship") {
+			handlers.ShipOrder().ServeHTTP(w, r)
+		} else {
+			http.NotFound(w, r)
+		}
+	}))
+	mux.Handle("/seller/account/update", handlers.UpdateAccount())
+	mux.Handle("/scan-qr", handlers.ScanQRCode())
+
 	// Define server address
 	addr := ":8080"
 	url := fmt.Sprintf("http://localhost%s", addr)
 
 	// Print clickable link in terminal
 	fmt.Printf("Server starting at \033[34m\033[4m%s\033[0m\n", url)
-	
+
 	// Start the server
 	log.Printf("Starting server on %s", addr)
 	err := http.ListenAndServe(addr, mux)
