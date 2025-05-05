@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            display: {{if .Error}}block{{else}}none{{end}};
+        }
+        
+        .wallet-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #2a6496;
+        }
+        
+        .role-selector {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .role-selector a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .role-selector a.active {
+            background-color: #2a6496;
+            color: white;
+            border-color: #2a6496;
+        }
+        
+        .file-upload-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .payment-options {
+            margin-top: 10px;
+        }
+        
+        .payment-option {
+            margin-bottom: 10px;
+        }
+        
+        .payment-fields {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DES - Delivery Escrow System</h1>
+            <a href="/" class="btn btn-secondary">Back to Home</a>
+        </header>
+        
+        <main>
+            <h2>Register as a Seller</h2>
+            
+            <div class="role-selector">
+                <a href="/register/buyer">Buyer</a>
+                <a href="/register/seller" class="active">Seller</a>
+                <a href="/register/transporter">Transporter</a>
+                <a href="/register/manufacturer">Manufacturer</a>
+            </div>
+            
+            <div class="form-container">
+                <form action="/register/seller" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="business_name">Business Name</label>
+                        <input type="text" id="business_name" name="business_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business_license">Business License (Scanned Image)</label>
+                        <input type="file" id="business_license" name="business_license" accept="image/*" required>
+                        <p class="file-upload-info">Please upload a clear, legible scan or photo of your business license.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business_permit">Business Permit (Scanned Image)</label>
+                        <input type="file" id="business_permit" name="business_permit" accept="image/*" required>
+                        <p class="file-upload-info">Please upload a clear, legible scan or photo of your business permit.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Payment Information</label>
+                        
+                        <div class="payment-options">
+                            <div class="payment-option">
+                                <input type="radio" id="payment_wallet" name="payment_type" value="wallet" checked>
+                                <label for="payment_wallet" style="display: inline;">Nova Wallet</label>
+                                
+                                <div class="payment-fields" id="wallet-fields">
+                                    <div class="form-group">
+                                        <label for="wallet">Nova Wallet Address</label>
+                                        <input type="text" id="wallet" name="wallet" placeholder="e.g., 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-option">
+                                <input type="radio" id="payment_bank" name="payment_type" value="bank">
+                                <label for="payment_bank" style="display: inline;">Bank Account</label>
+                                
+                                <div class="payment-fields" id="bank-fields" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="bank_name">Bank Name</label>
+                                        <input type="text" id="bank_name" name="bank_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="account_number">Account Number</label>
+                                        <input type="text" id="account_number" name="account_number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    
+                    <div class="wallet-info">
+                        <h4>Why do we need your business documents?</h4>
+                        <p>We require business documentation to verify your seller status and ensure compliance with local regulations. This helps us maintain a trusted marketplace for all users.</p>
+                        <p>Your documents are securely stored and only used for verification purposes.</p>
+                    </div>
+                    
+                    <div class="error-message">
+                        {{.Error}}
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button type="submit" class="btn">Register as Seller</button>
+                        <p>Already have an account? <a href="/login">Login here</a></p>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>&copy; 2023 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle payment fields based on selection
+        document.querySelectorAll('input[name="payment_type"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === 'wallet') {
+                    document.getElementById('wallet-fields').style.display = 'block';
+                    document.getElementById('bank-fields').style.display = 'none';
+                } else if (this.value === 'bank') {
+                    document.getElementById('wallet-fields').style.display = 'none';
+                    document.getElementById('bank-fields').style.display = 'block';
+                }
+            });
+        });
+        
+        // Client-side validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Validate payment information
+            const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+            
+            if (paymentType === 'wallet') {
+                const walletAddress = document.getElementById('wallet').value;
+                if (!walletAddress || walletAddress.length < 48) {
+                    e.preventDefault();
+                    alert('Please enter a valid Nova wallet address');
+                    return;
+                }
+            } else if (paymentType === 'bank') {
+                const bankName = document.getElementById('bank_name').value;
+                const accountNumber = document.getElementById('account_number').value;
+                
+                if (!bankName || !accountNumber) {
+                    e.preventDefault();
+                    alert('Please enter both bank name and account number');
+                    return;
+                }
+            }
+            
+            // Validate file uploads
+            const businessLicense = document.getElementById('business_license').files;
+            const businessPermit = document.getElementById('business_permit').files;
+            
+            if (businessLicense.length === 0 || businessPermit.length === 0) {
+                e.preventDefault();
+                alert('Please upload both business license and permit');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            display: {{if .Error}}block{{else}}none{{end}};
+        }
+        
+        .wallet-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #2a6496;
+        }
+        
+        .role-selector {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .role-selector a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .role-selector a.active {
+            background-color: #2a6496;
+            color: white;
+            border-color: #2a6496;
+        }
+        
+        .file-upload-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .payment-options {
+            margin-top: 10px;
+        }
+        
+        .payment-option {
+            margin-bottom: 10px;
+        }
+        
+        .payment-fields {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DES - Delivery Escrow System</h1>
+            <a href="/" class="btn btn-secondary">Back to Home</a>
+        </header>
+        
+        <main>
+            <h2>Register as a Seller</h2>
+            
+            <div class="role-selector">
+                <a href="/register/buyer">Buyer</a>
+                <a href="/register/seller" class="active">Seller</a>
+                <a href="/register/transporter">Transporter</a>
+                <a href="/register/manufacturer">Manufacturer</a>
+            </div>
+            
+            <div class="form-container">
+                <form action="/register/seller" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="business_name">Business Name</label>
+                        <input type="text" id="business_name" name="business_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business_license">Business License (Scanned Image)</label>
+                        <input type="file" id="business_license" name="business_license" accept="image/*" required>
+                        <p class="file-upload-info">Please upload a clear, legible scan or photo of your business license.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business_permit">Business Permit (Scanned Image)</label>
+                        <input type="file" id="business_permit" name="business_permit" accept="image/*" required>
+                        <p class="file-upload-info">Please upload a clear, legible scan or photo of your business permit.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Payment Information</label>
+                        
+                        <div class="payment-options">
+                            <div class="payment-option">
+                                <input type="radio" id="payment_wallet" name="payment_type" value="wallet" checked>
+                                <label for="payment_wallet" style="display: inline;">Nova Wallet</label>
+                                
+                                <div class="payment-fields" id="wallet-fields">
+                                    <div class="form-group">
+                                        <label for="wallet">Nova Wallet Address</label>
+                                        <input type="text" id="wallet" name="wallet" placeholder="e.g., 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-option">
+                                <input type="radio" id="payment_bank" name="payment_type" value="bank">
+                                <label for="payment_bank" style="display: inline;">Bank Account</label>
+                                
+                                <div class="payment-fields" id="bank-fields" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="bank_name">Bank Name</label>
+                                        <input type="text" id="bank_name" name="bank_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="account_number">Account Number</label>
+                                        <input type="text" id="account_number" name="account_number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    
+                    <div class="wallet-info">
+                        <h4>Why do we need your business documents?</h4>
+                        <p>We require business documentation to verify your seller status and ensure compliance with local regulations. This helps us maintain a trusted marketplace for all users.</p>
+                        <p>Your documents are securely stored and only used for verification purposes.</p>
+                    </div>
+                    
+                    <div class="error-message">
+                        {{.Error}}
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button type="submit" class="btn">Register as Seller</button>
+                        <p>Already have an account? <a href="/login">Login here</a></p>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>&copy; 2023 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle payment fields based on selection
+        document.querySelectorAll('input[name="payment_type"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === 'wallet') {
+                    document.getElementById('wallet-fields').style.display = 'block';
+                    document.getElementById('bank-fields').style.display = 'none';
+                } else if (this.value === 'bank') {
+                    document.getElementById('wallet-fields').style.display = 'none';
+                    document.getElementById('bank-fields').style.display = 'block';
+                }
+            });
+        });
+        
+        // Client-side validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Validate payment information
+            const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+            
+            if (paymentType === 'wallet') {
+                const walletAddress = document.getElementById('wallet').value;
+                if (!walletAddress || walletAddress.length < 48) {
+                    e.preventDefault();
+                    alert('Please enter a valid Nova wallet address');
+                    return;
+                }
+            } else if (paymentType === 'bank') {
+                const bankName = document.getElementById('bank_name').value;
+                const accountNumber = document.getElementById('account_number').value;
+                
+                if (!bankName || !accountNumber) {
+                    e.preventDefault();
+                    alert('Please enter both bank name and account number');
+                    return;
+                }
+            }
+            
+            // Validate file uploads
+            const businessLicense = document.getElementById('business_license').files;
+            const businessPermit = document.getElementById('business_permit').files;
+            
+            if (businessLicense.length === 0 || businessPermit.length === 0) {
+                e.preventDefault();
+                alert('Please upload both business license and permit');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
