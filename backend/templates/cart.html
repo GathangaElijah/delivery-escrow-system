@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        /* Basic styles if external CSS is not available */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .cart-container {
+            margin-top: 30px;
+        }
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cart-table th, .cart-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-table th {
+            background-color: #f8f9fa;
+        }
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .quantity-input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #2a6496;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .cart-summary {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .cart-total {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 50px 0;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2a6496;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #2a6496;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #f0f0f0;
+        }
+        .cart-icon {
+            position: relative;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="nav-container">
+                <a href="/" class="nav-logo">DES System</a>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/cart" class="cart-icon">
+                        Cart
+                        {{if .CartItems}}
+                        <span class="cart-count">{{len .CartItems}}</span>
+                        {{end}}
+                    </a>
+                    <a href="/login" class="btn">Login</a>
+                    <a href="/register" class="btn">Register</a>
+                </div>
+            </div>
+            <h1>Your Shopping Cart</h1>
+        </header>
+        
+        <main>
+            <div class="cart-container">
+                {{if .CartItems}}
+                <form action="/cart/update" method="POST">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .CartItems}}
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <img src="{{.ImageURL}}" alt="{{.Name}}" class="cart-item-image">
+                                        <div style="margin-left: 15px;">
+                                            <h3 style="margin: 0;">{{.Name}}</h3>
+                                            <p style="margin: 5px 0;">{{.Description}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>${{.Price}}</td>
+                                <td>
+                                    <input type="number" name="quantity_{{.ProductID}}" value="{{.Quantity}}" min="0" class="quantity-input">
+                                </td>
+                                <td>${{printf "%.2f" (multiply .Price (float64 .Quantity))}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                    
+                    <div style="margin-top: 20px; text-align: right;">
+                        <button type="submit" class="btn">Update Cart</button>
+                        <a href="/cart/clear" class="btn btn-danger">Clear Cart</a>
+                    </div>
+                </form>
+                
+                <div class="cart-summary">
+                    <div class="cart-total">Total: ${{printf "%.2f" .Total}}</div>
+                    <a href="/checkout/cart" class="btn">Proceed to Checkout</a>
+                    <a href="/" class="btn btn-secondary">Continue Shopping</a>
+                </div>
+                {{else}}
+                <div class="empty-cart">
+                    <h2>Your cart is empty</h2>
+                    <p>Looks like you haven't added any products to your cart yet.</p>
+                    <a href="/" class="btn">Continue Shopping</a>
+                </div>
+                {{end}}
+            </div>
+        </main>
+        
+        <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>&copy; 2025 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Helper function to format currency
+        function formatCurrency(amount) {
+            return '$' + parseFloat(amount).toFixed(2);
+        }
+        
+        // Update item totals when quantity changes
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const row = this.closest('tr');
+                const price = parseFloat(row.cells[1].textContent.replace('$', ''));
+                const quantity = parseInt(this.value);
+                const total = price * quantity;
+                row.cells[3].textContent = formatCurrency(total);
+            });
+        });
+    </script>
+</body>
+</html>
+{{define "multiply"}}
+    {{mul .Price (float64 .Quantity)}}
+{{end}}

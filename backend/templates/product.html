@@ -79,8 +79,23 @@
                     
                     <div class="product-actions">
                         <button class="btn" id="buy-now">Buy Now with Escrow</button>
-                        <button class="btn btn-secondary" id="add-to-cart">Add to Cart</button>
+                        <form action="/cart/add" method="POST" id="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{.Product.ID}}">
+                            <input type="hidden" name="name" value="{{.Product.Name}}">
+                            <input type="hidden" name="description" value="{{.Product.Description}}">
+                            <input type="hidden" name="price" value="{{.Product.Price}}">
+                            <input type="hidden" name="quantity" value="1">
+                            <input type="hidden" name="image_url" value="{{.Product.ImageURL}}">
+                            <button type="submit" class="btn btn-secondary">Add to Cart</button>
+                        </form>
                     </div>
+
+                    <script>
+                        document.getElementById('buy-now').addEventListener('click', function() {
+                            // Redirect to checkout page
+                            window.location.href = '/checkout/{{.Product.ID}}';
+                        });
+                    </script>
                     
                     <div class="escrow-info" style="margin-top: 30px;">
                         <h3>How Our Escrow System Works</h3>
@@ -96,20 +111,14 @@
         </main>
         
         <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
-            <p>&copy; 2023 Delivery Escrow System. All rights reserved.</p>
+            <p>&copy; 2025 Delivery Escrow System. All rights reserved.</p>
         </footer>
     </div>
 
     <script>
         document.getElementById('buy-now').addEventListener('click', function() {
-            // In a real app, this would redirect to a checkout page
-            alert('Proceeding to checkout with escrow protection!');
-            // window.location.href = '/checkout/{{.Product.ID}}';
-        });
-        
-        document.getElementById('add-to-cart').addEventListener('click', function() {
-            // In a real app, this would add the product to a cart
-            alert('Product added to cart!');
+            // Redirect to checkout page
+            window.location.href = '/checkout/{{.Product.ID}}';
         });
     </script>
 </body>

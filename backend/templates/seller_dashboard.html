@@ -296,6 +296,12 @@
                                 <p>{{.Customer.ShippingAddress}}</p>
                             </div>
                             
+                            <div class="order-escrow" style="margin-top: 15px; padding: 10px; background-color: #e9f7ef; border-radius: 4px;">
+                                <h4 style="margin-top: 0;">Escrow Status</h4>
+                                <p><strong>Status:</strong> {{.EscrowStatus}}</p>
+                                <p><strong>Amount:</strong> ${{printf "%.2f" .EscrowAmount}}</p>
+                            </div>
+                            
                             <div class="order-actions">
                                 {{if eq .Status "pending"}}
                                 <a href="/seller/orders/{{.ID}}/process" class="btn">Process Order</a>
@@ -535,166 +541,186 @@
         </div>
         
         <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
-            <p>&copy; 2023 Delivery Escrow System. All rights reserved.</p>
+            <p>&copy; 2025 Delivery Escrow System. All rights reserved.</p>
         </footer>
     </div>
 
     <script>
-        // Tab navigation
-        document.querySelectorAll('.sidebar-menu a').forEach(function(tab) {
-            tab.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Hide all tab contents
-                document.querySelectorAll('.tab-content').forEach(function(content) {
-                    content.classList.remove('active');
-                });
-                
-                // Remove active class from all tabs
-                document.querySelectorAll('.sidebar-menu a').forEach(function(t) {
-                    t.classList.remove('active');
-                });
-                
-                // Show the selected tab content
-                const tabId = this.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-                
-                // Add active class to the clicked tab
-                this.classList.add('active');
-                
-                // Update URL hash
-                window.location.hash = tabId;
-            });
-        });
-        
-        // Check for hash in URL and activate the corresponding tab
-        if (window.location.hash) {
-            const hash = window.location.hash.substring(1);
-            const tab = document.querySelector(`.sidebar-menu a[data-tab="${hash}"]`);
-            if (tab) {
-                tab.click();
-            }
-        }
-        
-        // Filter orders by status
-        document.getElementById('order-filter').addEventListener('change', function() {
-            const status = this.value;
-            const orderCards = document.querySelectorAll('.order-card');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabLinks = document.querySelectorAll('.sidebar-menu a');
+            const tabContents = document.querySelectorAll('.tab-content');
             
-            orderCards.forEach(function(card) {
-                const orderStatus = card.querySelector('.order-status').classList[1].replace('status-', '');
-                
-                if (status === 'all' || status === orderStatus) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
+            tabLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get the tab to show
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs
+                    tabLinks.forEach(function(link) {
+                        link.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab contents
+                    tabContents.forEach(function(content) {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Update URL hash
+                    window.location.hash = tabId;
+                });
+            });
+            
+            // Check for hash in URL and activate the corresponding tab
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const tab = document.querySelector(`.sidebar-menu a[data-tab="${hash}"]`);
+                if (tab) {
+                    tab.click();
                 }
-            });
-        });
-        
-        // Shipping form submission
-        document.getElementById('shipping-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+            }
             
-            // Create FormData object
-            const formData = new FormData(this);
-            
-            // Send AJAX request to server
-            fetch('/seller/shipping/prepare', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Set QR code image source
-                document.getElementById('qr-code-image').src = data.qrCodeUrl;
+            // Filter orders by status
+            document.getElementById('order-filter').addEventListener('change', function() {
+                const status = this.value;
+                const orderCards = document.querySelectorAll('.order-card');
                 
-                // Show QR code section
-                document.getElementById('qr-code-section').style.display = 'block';
-                
-                // Scroll to the QR code section
-                document.getElementById('qr-code-section').scrollIntoView({ behavior: 'smooth' });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to generate QR code. Please try again.');
+                orderCards.forEach(function(card) {
+                    const orderStatus = card.querySelector('.order-status').classList[1].replace('status-', '');
+                    
+                    if (status === 'all' || status === orderStatus) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
-        });
-        
-        // Print QR code
-        function printQRCode() {
-            const qrCodeUrl = document.getElementById('qr-code-image').src;
-            const printWindow = window.open('', '_blank');
             
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>Shipping QR Code</title>
-                    <style>
-                        body {
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            height: 100vh;
-                            margin: 0;
-                            padding: 20px;
-                            font-family: Arial, sans-serif;
-                        }
-                        
-                        .qr-code {
-                            max-width: 300px;
-                            padding: 20px;
-                            border: 1px solid #ddd;
-                            background-color: #fff;
-                        }
-                        
-                        .qr-code img {
-                            width: 100%;
-                        }
-                        
-                        .instructions {
-                            margin-top: 20px;
-                            text-align: center;
-                            max-width: 400px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="qr-code">
-                        <img src="${qrCodeUrl}" alt="Shipping QR Code">
-                    </div>
+            // Shipping form submission
+            const shippingForm = document.getElementById('shipping-form');
+            if (shippingForm) {
+                shippingForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
                     
-                    <div class="instructions">
-                        <p>This QR code can only be scanned twice: once by you (the seller) and once by the buyer.</p>
-                        <p>Attach this QR code to the package for delivery confirmation.</p>
-                    </div>
+                    // Create FormData object
+                    const formData = new FormData(this);
                     
-                    <script>
-                        window.onload = function() {
-                            window.print();
-                        };
-                    </script>
-                </body>
-                </html>
-            `);
+                    // Send AJAX request to server
+                    fetch('/seller/shipping/prepare', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Set QR code image source
+                        document.getElementById('qr-code-image').src = data.qrCodeUrl;
+                        
+                        // Show QR code section
+                        document.getElementById('qr-code-section').style.display = 'block';
+                        
+                        // Scroll to the QR code section
+                        document.getElementById('qr-code-section').scrollIntoView({ behavior: 'smooth' });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to generate QR code. Please try again.');
+                    });
+                });
+            }
             
-            printWindow.document.close();
-        }
-        
-        // Set download link for QR code
-        document.getElementById('download-qr').addEventListener('click', function(e) {
-            e.preventDefault();
+            // Print QR code function
+            window.printQRCode = function() {
+                const qrCodeUrl = document.getElementById('qr-code-image').src;
+                
+                // Open a new window for printing
+                const printWindow = window.open('', '_blank');
+                
+                printWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Shipping QR Code</title>
+                        <style>
+                            body {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                height: 100vh;
+                                margin: 0;
+                                padding: 20px;
+                                font-family: Arial, sans-serif;
+                            }
+                            
+                            .qr-code {
+                                max-width: 300px;
+                                padding: 20px;
+                                border: 1px solid #ddd;
+                                background-color: #fff;
+                            }
+                            
+                            .qr-code img {
+                                width: 100%;
+                            }
+                            
+                            .instructions {
+                                margin-top: 20px;
+                                text-align: center;
+                                max-width: 400px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="qr-code">
+                            <img src="${qrCodeUrl}" alt="Shipping QR Code">
+                        </div>
+                        
+                        <div class="instructions">
+                            <p>This QR code can only be scanned twice: once by you (the seller) and once by the buyer.</p>
+                            <p>Attach this QR code to the package for delivery confirmation.</p>
+                        </div>
+                        
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                            };
+                        </script>
+                    </body>
+                    </html>
+                `);
+                
+                printWindow.document.close();
+            };
             
-            const qrImageUrl = document.getElementById('qr-code-image').src;
-            
-            // Create a temporary link and trigger download
-            const link = document.createElement('a');
-            link.href = qrImageUrl;
-            link.download = 'shipping-qr-code.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Set download link for QR code
+            const downloadQrLink = document.getElementById('download-qr');
+            if (downloadQrLink) {
+                downloadQrLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const qrImageUrl = document.getElementById('qr-code-image').src;
+                    
+                    // Create a temporary link and trigger download
+                    const link = document.createElement('a');
+                    link.href = qrImageUrl;
+                    link.download = 'shipping-qr-code.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
         });
     </script>
 </body>

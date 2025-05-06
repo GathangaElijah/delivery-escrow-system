@@ -104,6 +104,7 @@
                 <a href="/" class="nav-logo">DES System</a>
                 <div class="nav-links">
                     <a href="/">Home</a>
+                    <a href="/cart" class="cart-icon">Cart</a>
                     <a href="/login" class="btn">Login</a>
                     <a href="/register" class="btn">Register</a>
                 </div>
@@ -116,28 +117,94 @@
             <h2>Available Products</h2>
             <div class="product-grid">
                 {{range .Products}}
-                <div class="product-card">
+                <div class="product-card" data-id="{{.ID}}">
                     <img src="{{.ImageURL}}" alt="{{.Name}}" class="product-image">
                     <h3>{{.Name}}</h3>
                     <p>{{.Description}}</p>
                     <p class="product-price">${{.Price}}</p>
                     <a href="/product/{{.ID}}" class="btn">View Details</a>
                     <button class="btn" onclick="addToCart('{{.ID}}')">Add to Cart</button>
+                    <!-- Fallback form for adding to cart -->
+                    <form action="/cart/add" method="POST" style="display: none;">
+                        <input type="hidden" name="product_id" value="{{.ID}}">
+                        <input type="hidden" name="name" value="{{.Name}}">
+                        <input type="hidden" name="description" value="{{.Description}}">
+                        <input type="hidden" name="price" value="{{.Price}}">
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="image_url" value="{{.ImageURL}}">
+                        <button type="submit" class="btn">Add to Cart (Fallback)</button>
+                    </form>
                 </div>
                 {{end}}
             </div>
         </main>
         
         <footer>
-            <p>&copy; 2023 Delivery Escrow System. All rights reserved.</p>
+            <p>&copy; 2025 Delivery Escrow System. All rights reserved.</p>
         </footer>
     </div>
 
     <script>
         function addToCart(productId) {
-            // In a real application, this would make an AJAX call to add the product to a cart
-            alert('Product ' + productId + ' added to cart!');
-            // You could use fetch API here to call a backend endpoint
+            console.log("Adding product to cart: " + productId);
+            
+            // Find the product card
+            const productCard = document.querySelector(`.product-card[data-id="${productId}"]`);
+            if (!productCard) {
+                console.error("Product card not found for ID: " + productId);
+                alert('Product not found!');
+                return;
+            }
+            
+            // Get product data
+            const name = productCard.querySelector('h3').textContent;
+            const description = productCard.querySelector('p:not(.product-price)').textContent;
+            const price = productCard.querySelector('.product-price').textContent.replace('$', '');
+            const imageURL = productCard.querySelector('img').src;
+            
+            console.log("Product data:", {
+                id: productId,
+                name: name,
+                description: description,
+                price: price,
+                imageURL: imageURL
+            });
+            
+            // Use the fallback form instead of AJAX
+            const form = productCard.querySelector('form');
+            if (form) {
+                console.log("Submitting form directly");
+                form.submit();
+                return;
+            }
+            
+            // If no form found, create one dynamically
+            const newForm = document.createElement('form');
+            newForm.method = 'POST';
+            newForm.action = '/cart/add';
+            
+            // Add hidden fields
+            const fields = {
+                'product_id': productId,
+                'name': name,
+                'description': description,
+                'price': price,
+                'quantity': '1',
+                'image_url': imageURL
+            };
+            
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                newForm.appendChild(input);
+            }
+            
+            // Add form to document and submit
+            document.body.appendChild(newForm);
+            console.log("Submitting dynamically created form");
+            newForm.submit();
         }
     </script>
 </body>
