@@ -3,7 +3,6 @@ package handlers
 import (
 	"html/template"
 	"net/http"
-	"path/filepath"
 )
 
 // Product represents a product that can be purchased
@@ -37,16 +36,16 @@ func Index() http.HandlerFunc {
 		}
 
 		// Parse template
-		tmpl, err := template.ParseFiles(filepath.Join("templates", "home.html"))
+		tmpl, err := template.ParseFiles("templates/home.html")
 		if err != nil {
 			http.Error(w, "Failed to load template", http.StatusInternalServerError)
 			return
 		}
 
 		// Execute template
-		if err := tmpl.Execute(w, data); err != nil {
+		err = tmpl.Execute(w, data)
+		if err != nil {
 			http.Error(w, "Failed to render template", http.StatusInternalServerError)
-			return
 		}
 	}
 }
