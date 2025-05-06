@@ -65,7 +65,28 @@ func main() {
 		}
 	}))
 	mux.Handle("/seller/account/update", handlers.UpdateAccount())
+	
+	// Escrow-related routes
+	mux.Handle("/escrow/status/", handlers.GetEscrowStatus())
 	mux.Handle("/scan-qr", handlers.ScanQRCode())
+	
+	// Checkout routes
+	mux.Handle("/checkout/", handlers.Checkout())
+	mux.Handle("/checkout/process", handlers.ProcessCheckout())
+	mux.Handle("/checkout/confirmation", handlers.CheckoutConfirmation())
+
+	// Cart routes
+	mux.Handle("/cart", handlers.ViewCart())
+	mux.Handle("/cart/add", handlers.AddToCart())
+	mux.Handle("/cart/update", handlers.UpdateCart())
+	mux.Handle("/cart/clear", handlers.ClearCart())
+
+	// Add debug routes
+	mux.Handle("/debug/info", handlers.DebugInfo())
+	mux.Handle("/debug/cart", handlers.DebugCart())
+	mux.Handle("/debug/create-test-order", handlers.CreateTestOrder())
+	mux.Handle("/debug/add-product2", handlers.AddProduct2ToCart())
+	mux.Handle("/test/cart", handlers.TestCart())
 
 	// Define server address
 	addr := ":8080"
