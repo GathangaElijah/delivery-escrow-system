@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar-menu a.active {
+            font-weight: bold;
+            color: #2a6496;
+            border-left: 3px solid #2a6496;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .order-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-items {
+            margin-bottom: 15px;
+        }
+        
+        .order-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .order-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        
+        .order-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .order-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-processing {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-shipped {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-delivered {
+            background-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .product-card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .product-card-content {
+            padding: 15px;
+        }
+        
+        .product-card-price {
+            font-weight: bold;
+            color: #2a6496;
+            margin-top: 5px;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .shipping-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .qr-code-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .qr-code {
+            max-width: 200px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        
+        .shipping-instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .shipping-instructions ol {
+            padding-left: 20px;
+        }
+        
+        .shipping-instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .scan-count {
+            text-align: center;
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="nav-container">
+                <a href="/" class="nav-logo">DES System</a>
+                <div class="nav-links">
+                    <span>Welcome, {{.User.BusinessName}}</span>
+                    <a href="/logout" class="btn btn-secondary">Logout</a>
+                </div>
+            </div>
+        </header>
+        
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active" data-tab="orders">Orders</a></li>
+                    <li><a href="#" data-tab="products">My Products</a></li>
+                    <li><a href="#" data-tab="add-product">Add New Product</a></li>
+                    <li><a href="#" data-tab="shipping">Shipping</a></li>
+                    <li><a href="#" data-tab="account">Account Settings</a></li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <!-- Orders Tab -->
+                <div id="orders" class="tab-content active">
+                    <div class="dashboard-header">
+                        <h2>Orders</h2>
+                        <div>
+                            <select id="order-filter">
+                                <option value="all">All Orders</option>
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="orders-list">
+                        {{range .Orders}}
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div>
+                                    <h3>Order #{{.ID}}</h3>
+                                    <p>Placed on {{.Date}}</p>
+                                </div>
+                                <div>
+                                    <span class="order-status status-{{.Status}}">{{.Status}}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="order-items">
+                                {{range .Items}}
+                                <div class="order-item">
+                                    <img src="{{.ImageURL}}" alt="{{.Name}}" class="order-item-image">
+                                    <div>
+                                        <h4>{{.Name}}</h4>
+                                        <p>Quantity: {{.Quantity}}</p>
+                                        <p>${{.Price}}</p>
+                                    </div>
+                                </div>
+                                {{end}}
+                            </div>
+                            
+                            <div class="order-customer">
+                                <h4>Customer Information</h4>
+                                <p>{{.Customer.Name}}</p>
+                                <p>{{.Customer.Email}}</p>
+                                <p>{{.Customer.ShippingAddress}}</p>
+                            </div>
+                            
+                            <div class="order-escrow" style="margin-top: 15px; padding: 10px; background-color: #e9f7ef; border-radius: 4px;">
+                                <h4 style="margin-top: 0;">Escrow Status</h4>
+                                <p><strong>Status:</strong> {{.EscrowStatus}}</p>
+                                <p><strong>Amount:</strong> ${{printf "%.2f" .EscrowAmount}}</p>
+                            </div>
+                            
+                            <div class="order-actions">
+                                {{if eq .Status "pending"}}
+                                <a href="/seller/orders/{{.ID}}/process" class="btn">Process Order</a>
+                                {{else if eq .Status "processing"}}
+                                <a href="/seller/orders/{{.ID}}/ship" class="btn">Ship Order</a>
+                                {{else if eq .Status "shipped"}}
+                                <span>Awaiting delivery confirmation</span>
+                                {{else}}
+                                <span>Order completed</span>
+                                {{end}}
+                            </div>
+                        </div>
+                        {{else}}
+                        <p>No orders found.</p>
+                        {{end}}
+                    </div>
+                </div>
+                
+                <!-- Products Tab -->
+                <div id="products" class="tab-content">
+                    <div class="dashboard-header">
+                        <h2>My Products</h2>
+                        <a href="#" class="btn" data-tab="add-product">Add New Product</a>
+                    </div>
+                    
+                    <div class="product-grid">
+                        {{range .Products}}
+                        <div class="product-card">
+                            <img src="{{.ImageURL}}" alt="{{.Name}}" class="product-card-image">
+                            <div class="product-card-content">
+                                <h3>{{.Name}}</h3>
+                                <p>{{.Description}}</p>
+                                <p class="product-card-price">${{.Price}}</p>
+                                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                                    <a href="/seller/products/{{.ID}}/edit" class="btn btn-secondary">Edit</a>
+                                    <a href="/seller/products/{{.ID}}/delete" class="btn btn-secondary" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{else}}
+                        <p>No products found. <a href="#" data-tab="add-product">Add your first product</a>.</p>
+                        {{end}}
+                    </div>
+                </div>
+                
+                <!-- Add Product Tab -->
+                <div id="add-product" class="tab-content">
+                    <div class="dashboard-header">
+                        <h2>Add New Product</h2>
+                    </div>
+                    
+                    <div class="form-container">
+                        <form action="/seller/products/add" method="POST" enctype="multipart/form-data">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="product_name">Product Name</label>
+                                    <input type="text" id="product_name" name="product_name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="product_price">Price ($)</label>
+                                    <input type="number" id="product_price" name="product_price" step="0.01" min="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="product_description">Description</label>
+                                <textarea id="product_description" name="product_description" rows="4" required></textarea>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="product_image">Product Image</label>
+                                    <input type="file" id="product_image" name="product_image" accept="image/*" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="product_category">Category</label>
+                                    <select id="product_category" name="product_category" required>
+                                        <option value="">Select a category</option>
+                                        <option value="electronics">Electronics</option>
+                                        <option value="clothing">Clothing</option>
+                                        <option value="home">Home & Kitchen</option>
+                                        <option value="beauty">Beauty & Personal Care</option>
+                                        <option value="toys">Toys & Games</option>
+                                        <option value="books">Books</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="product_quantity">Quantity in Stock</label>
+                                    <input type="number" id="product_quantity" name="product_quantity" min="1" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="product_sku">SKU (Stock Keeping Unit)</label>
+                                    <input type="text" id="product_sku" name="product_sku">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="manufacturer_signature">Manufacturer Signature (Optional)</label>
+                                <input type="file" id="manufacturer_signature" name="manufacturer_signature" accept="image/*">
+                                <p class="file-upload-info">If you have a digital signature from the manufacturer, upload it here for product authenticity verification.</p>
+                            </div>
+                            
+                            <div class="form-footer">
+                                <button type="submit" class="btn">Add Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Shipping Tab -->
+                <div id="shipping" class="tab-content">
+                    <div class="dashboard-header">
+                        <h2>Prepare Shipment</h2>
+                    </div>
+                    
+                    <div class="shipping-container">
+                        <div class="shipping-instructions">
+                            <h3>Shipping Instructions</h3>
+                            <ol>
+                                <li>Select the order you want to ship from the dropdown below.</li>
+                                <li>Take a clear photo of the packaged product.</li>
+                                <li>Upload the manufacturer's signature if available.</li>
+                                <li>Generate a unique QR code for this shipment.</li>
+                                <li>Print the QR code and attach it to the package.</li>
+                                <li>The buyer will scan this QR code upon delivery to release the funds from escrow.</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="form-container">
+                            <form action="/seller/shipping/prepare" method="POST" enctype="multipart/form-data" id="shipping-form">
+                                <div class="form-group">
+                                    <label for="order_id">Select Order</label>
+                                    <select id="order_id" name="order_id" required>
+                                        <option value="">Select an order to ship</option>
+                                        {{range .ProcessingOrders}}
+                                        <option value="{{.ID}}">Order #{{.ID}} - {{.Customer.Name}}</option>
+                                        {{end}}
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="package_photo">Package Photo</label>
+                                    <input type="file" id="package_photo" name="package_photo" accept="image/*" required>
+                                    <p class="file-upload-info">Take a clear photo of the packaged product before shipping.</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="manufacturer_signature">Manufacturer Signature (if available)</label>
+                                    <input type="file" id="manufacturer_signature" name="manufacturer_signature" accept="image/*">
+                                    <p class="file-upload-info">Upload the manufacturer's signature for product authenticity verification.</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="tracking_number">Tracking Number (if available)</label>
+                                    <input type="text" id="tracking_number" name="tracking_number">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="shipping_notes">Additional Notes</label>
+                                    <textarea id="shipping_notes" name="shipping_notes" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="form-footer">
+                                    <button type="submit" class="btn">Generate Shipping QR Code</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="qr-code-container" id="qr-code-section" style="display: none;">
+                            <h3>Shipping QR Code</h3>
+                            <p>Print this QR code and attach it to the package. The buyer will scan it to confirm delivery.</p>
+                            
+                            <div class="qr-code">
+                                <img src="" alt="Shipping QR Code" id="qr-code-image">
+                            </div>
+                            
+                            <p class="scan-count">This QR code can only be scanned twice: once by you (the seller) and once by the buyer.</p>
+                            
+                            <button class="btn" onclick="printQRCode()">Print QR Code</button>
+                            <a href="#" class="btn btn-secondary" id="download-qr">Download QR Code</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Settings Tab -->
+                <div id="account" class="tab-content">
+                    <div class="dashboard-header">
+                        <h2>Account Settings</h2>
+                    </div>
+                    
+                    <div class="form-container">
+                        <form action="/seller/account/update" method="POST">
+                            <div class="form-group">
+                                <label for="business_name">Business Name</label>
+                                <input type="text" id="business_name" name="business_name" value="{{.User.BusinessName}}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" value="{{.User.Email}}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="wallet">Nova Wallet Address</label>
+                                <input type="text" id="wallet" name="wallet" value="{{.User.Wallet}}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="current_password">Current Password</label>
+                                <input type="password" id="current_password" name="current_password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="new_password">New Password (leave blank to keep current)</label>
+                                <input type="password" id="new_password" name="new_password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirm_password">Confirm New Password</label>
+                                <input type="password" id="confirm_password" name="confirm_password">
+                            </div>
+                            
+                            <div class="form-footer">
+                                <button type="submit" class="btn">Update Account</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>&copy; 2025 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabLinks = document.querySelectorAll('.sidebar-menu a');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get the tab to show
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs
+                    tabLinks.forEach(function(link) {
+                        link.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab contents
+                    tabContents.forEach(function(content) {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Update URL hash
+                    window.location.hash = tabId;
+                });
+            });
+            
+            // Check for hash in URL and activate the corresponding tab
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const tab = document.querySelector(`.sidebar-menu a[data-tab="${hash}"]`);
+                if (tab) {
+                    tab.click();
+                }
+            }
+            
+            // Filter orders by status
+            document.getElementById('order-filter').addEventListener('change', function() {
+                const status = this.value;
+                const orderCards = document.querySelectorAll('.order-card');
+                
+                orderCards.forEach(function(card) {
+                    const orderStatus = card.querySelector('.order-status').classList[1].replace('status-', '');
+                    
+                    if (status === 'all' || status === orderStatus) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Shipping form submission
+            const shippingForm = document.getElementById('shipping-form');
+            if (shippingForm) {
+                shippingForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Create FormData object
+                    const formData = new FormData(this);
+                    
+                    // Send AJAX request to server
+                    fetch('/seller/shipping/prepare', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Set QR code image source
+                        document.getElementById('qr-code-image').src = data.qrCodeUrl;
+                        
+                        // Show QR code section
+                        document.getElementById('qr-code-section').style.display = 'block';
+                        
+                        // Scroll to the QR code section
+                        document.getElementById('qr-code-section').scrollIntoView({ behavior: 'smooth' });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to generate QR code. Please try again.');
+                    });
+                });
+            }
+            
+            // Print QR code function
+            window.printQRCode = function() {
+                const qrCodeUrl = document.getElementById('qr-code-image').src;
+                
+                // Open a new window for printing
+                const printWindow = window.open('', '_blank');
+                
+                printWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Shipping QR Code</title>
+                        <style>
+                            body {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                height: 100vh;
+                                margin: 0;
+                                padding: 20px;
+                                font-family: Arial, sans-serif;
+                            }
+                            
+                            .qr-code {
+                                max-width: 300px;
+                                padding: 20px;
+                                border: 1px solid #ddd;
+                                background-color: #fff;
+                            }
+                            
+                            .qr-code img {
+                                width: 100%;
+                            }
+                            
+                            .instructions {
+                                margin-top: 20px;
+                                text-align: center;
+                                max-width: 400px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="qr-code">
+                            <img src="${qrCodeUrl}" alt="Shipping QR Code">
+                        </div>
+                        
+                        <div class="instructions">
+                            <p>This QR code can only be scanned twice: once by you (the seller) and once by the buyer.</p>
+                            <p>Attach this QR code to the package for delivery confirmation.</p>
+                        </div>
+                        
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                            };
+                        </script>
+                    </body>
+                    </html>
+                `);
+                
+                printWindow.document.close();
+            };
+            
+            // Set download link for QR code
+            const downloadQrLink = document.getElementById('download-qr');
+            if (downloadQrLink) {
+                downloadQrLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const qrImageUrl = document.getElementById('qr-code-image').src;
+                    
+                    // Create a temporary link and trigger download
+                    const link = document.createElement('a');
+                    link.href = qrImageUrl;
+                    link.download = 'shipping-qr-code.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

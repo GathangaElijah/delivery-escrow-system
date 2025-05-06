@@ -1,0 +1,30 @@
+<div class="order-escrow" style="margin-top: 15px; padding: 10px; background-color: #e9f7ef; border-radius: 4px;">
+    <h4 style="margin-top: 0;">Escrow Status</h4>
+    <p><strong>Status:</strong> {{.EscrowStatus}}</p>
+    <p><strong>Amount:</strong> ${{printf "%.2f" .EscrowAmount}}</p>
+    <p class="escrow-info">Funds are automatically released by the smart contract upon delivery confirmation.</p>
+    
+    {{if eq .Status "delivered"}}
+    <p><strong>Delivery confirmed!</strong> Funds have been automatically released by the smart contract.</p>
+    <div class="fund-distribution">
+        <p><strong>Seller received:</strong> ${{printf "%.2f" (multiply .EscrowAmount 0.9)}}</p>
+        <p><strong>Transporter received:</strong> ${{printf "%.2f" (multiply .EscrowAmount 0.1)}}</p>
+    </div>
+    {{else if eq .Status "shipped"}}
+    <p>Once you receive your order, scan the QR code on the package to confirm delivery.</p>
+    {{else if eq .EscrowStatus "Dispute Raised"}}
+    <p><strong>Dispute in progress.</strong> Our team will review your case and contact you soon.</p>
+    {{end}}
+    
+    {{if and (eq .Status "delivered") (ne .EscrowStatus "Dispute Raised")}}
+    <div class="dispute-section" style="margin-top: 10px; border-top: 1px solid #ccc; padding-top: 10px;">
+        <p>Not satisfied with your order? You can raise a dispute:</p>
+        <form id="dispute-form" action="/raise-dispute" method="POST">
+            <input type="hidden" name="order_id" value="{{.ID}}">
+            <input type="hidden" name="buyer_wallet" value="{{.BuyerWallet}}">
+            <textarea name="dispute_reason" placeholder="Enter your dispute reason here..." required></textarea>
+            <button type="submit">Raise Dispute</button>
+        </form>
+    </div>
+    {{end}}
+</div>

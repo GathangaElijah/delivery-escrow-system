@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cart</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background: #2a6496; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Cart Functionality</h1>
+        
+        <h2>Add Item to Cart</h2>
+        <form action="/cart/add" method="POST" id="addToCartForm">
+            <div class="form-group">
+                <label for="product_id">Product ID</label>
+                <input type="text" id="product_id" name="product_id" value="test1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Product Name</label>
+                <input type="text" id="name" name="name" value="Test Product" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description">This is a test product</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" value="99.99" step="0.01" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="image_url">Image URL</label>
+                <input type="text" id="image_url" name="image_url" value="/static/img/product1.jpg">
+            </div>
+            
+            <button type="submit">Add to Cart</button>
+        </form>
+        
+        <div style="margin-top: 30px;">
+            <a href="/cart">View Cart</a> | 
+            <a href="/debug/cart">Debug Cart</a> | 
+            <a href="/">Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Add event listener to the form
+        document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+            // Log form data before submission
+            console.log('Submitting form with data:');
+            const formData = new FormData(this);
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+        });
+    </script>
+</body>
+</html>

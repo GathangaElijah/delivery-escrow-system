@@ -3,9 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DES</title>
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        /* Basic styles if external CSS is not available */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .product-price {
+            font-weight: bold;
+            color: #2a6496;
+            font-size: 1.2em;
+        }
+        .btn {
+            display: inline-block;
+            background: #2a6496;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        .btn:hover {
+            background: #1e4b75;
+        }
+        /* Navigation styles */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2a6496;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #2a6496;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #f0f0f0;
+        }
+        .nav-links .btn {
+            color: white;
+        }
+        .nav-links .btn:hover {
+            background: #1e4b75;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to DES system</h1>
+    <div class="container">
+        <header>
+            <div class="nav-container">
+                <a href="/" class="nav-logo">DES System</a>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/cart" class="cart-icon">Cart</a>
+                    <a href="/login" class="btn">Login</a>
+                    <a href="/register" class="btn">Register</a>
+                </div>
+            </div>
+            <h1>Welcome to DES system</h1>
+            <p>Secure your purchases with our delivery escrow service</p>
+        </header>
+        
+        <main>
+            <h2>Available Products</h2>
+            <div class="product-grid">
+                {{range .Products}}
+                <div class="product-card" data-id="{{.ID}}">
+                    <img src="{{.ImageURL}}" alt="{{.Name}}" class="product-image">
+                    <h3>{{.Name}}</h3>
+                    <p>{{.Description}}</p>
+                    <p class="product-price">${{.Price}}</p>
+                    <a href="/product/{{.ID}}" class="btn">View Details</a>
+                    <button class="btn" onclick="addToCart('{{.ID}}')">Add to Cart</button>
+                    <!-- Fallback form for adding to cart -->
+                    <form action="/cart/add" method="POST" style="display: none;">
+                        <input type="hidden" name="product_id" value="{{.ID}}">
+                        <input type="hidden" name="name" value="{{.Name}}">
+                        <input type="hidden" name="description" value="{{.Description}}">
+                        <input type="hidden" name="price" value="{{.Price}}">
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="image_url" value="{{.ImageURL}}">
+                        <button type="submit" class="btn">Add to Cart (Fallback)</button>
+                    </form>
+                </div>
+                {{end}}
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        function addToCart(productId) {
+            console.log("Adding product to cart: " + productId);
+            
+            // Find the product card
+            const productCard = document.querySelector(`.product-card[data-id="${productId}"]`);
+            if (!productCard) {
+                console.error("Product card not found for ID: " + productId);
+                alert('Product not found!');
+                return;
+            }
+            
+            // Get product data
+            const name = productCard.querySelector('h3').textContent;
+            const description = productCard.querySelector('p:not(.product-price)').textContent;
+            const price = productCard.querySelector('.product-price').textContent.replace('$', '');
+            const imageURL = productCard.querySelector('img').src;
+            
+            console.log("Product data:", {
+                id: productId,
+                name: name,
+                description: description,
+                price: price,
+                imageURL: imageURL
+            });
+            
+            // Use the fallback form instead of AJAX
+            const form = productCard.querySelector('form');
+            if (form) {
+                console.log("Submitting form directly");
+                form.submit();
+                return;
+            }
+            
+            // If no form found, create one dynamically
+            const newForm = document.createElement('form');
+            newForm.method = 'POST';
+            newForm.action = '/cart/add';
+            
+            // Add hidden fields
+            const fields = {
+                'product_id': productId,
+                'name': name,
+                'description': description,
+                'price': price,
+                'quantity': '1',
+                'image_url': imageURL
+            };
+            
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                newForm.appendChild(input);
+            }
+            
+            // Add form to document and submit
+            document.body.appendChild(newForm);
+            console.log("Submitting dynamically created form");
+            newForm.submit();
+        }
+    </script>
 </body>
 </html>

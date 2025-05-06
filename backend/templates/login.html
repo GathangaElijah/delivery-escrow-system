@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            display: {{if .Error}}block{{else}}none{{end}};
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #2a6496;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        
+        .btn:hover {
+            background: #1e4b75;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        /* Navigation styles */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2a6496;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="nav-container">
+                <a href="/" class="nav-logo">DES System</a>
+                <a href="/" class="btn btn-secondary">Back to Home</a>
+            </div>
+            <h1>Login to DES</h1>
+        </header>
+        
+        <main>
+            <div class="form-container">
+                <form action="/login" method="POST">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="error-message">
+                        {{.Error}}
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button type="submit" class="btn">Login</button>
+                        <p>Don't have an account? <a href="/register">Register here</a></p>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>&copy; 2025 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Optional: Add client-side validation if needed
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                e.preventDefault();
+                alert('Please fill in all fields');
+            }
+        });
+    </script>
+</body>
+</html>

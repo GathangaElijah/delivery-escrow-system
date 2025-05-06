@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .checkout-container {
+            display: flex;
+            margin: 40px 0;
+            gap: 40px;
+        }
+        
+        .cart-summary {
+            flex: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .escrow-form {
+            flex: 2;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: #45a049;
+        }
+        
+        .escrow-info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .cart-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: bold;
+            margin: 0 0 5px 0;
+        }
+        
+        .cart-item-price {
+            color: #666;
+        }
+        
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #e9f7ef;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .security-badge svg {
+            margin-right: 10px;
+            fill: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="nav-container">
+                <a href="/" class="nav-logo">DES System</a>
+            </div>
+        </header>
+        
+        <main>
+            <h1>Checkout - Escrow Payment</h1>
+            
+            <div class="checkout-container">
+                <div class="cart-summary">
+                    <h2>Order Summary</h2>
+                    
+                    {{range .CartItems}}
+                    <div class="cart-item">
+                        <img src="{{.ImageURL}}" alt="{{.Name}}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-name">{{.Name}}</h3>
+                            <p class="cart-item-price">${{.Price}} x {{.Quantity}}</p>
+                        </div>
+                    </div>
+                    {{end}}
+                    
+                    <div class="cart-total">
+                        Total: ${{printf "%.2f" .Total}}
+                    </div>
+                </div>
+                
+                <div class="escrow-form">
+                    <h2>Escrow Payment</h2>
+                    
+                    <div class="security-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                        </svg>
+                        <div>
+                            <strong>Secure Escrow System</strong>
+                            <p style="margin: 0;">Your payment is protected by our blockchain-based escrow contract</p>
+                        </div>
+                    </div>
+                    
+                    <p>Your payment will be held in escrow until you confirm receipt of the products.</p>
+                    
+                    <form action="/checkout/process" method="POST">
+                        <input type="hidden" name="product_id" value="cart">
+                        <input type="hidden" name="amount" value="{{.Total}}">
+                        
+                        <div class="form-group">
+                            <label for="buyer_wallet">Your Wallet Address</label>
+                            <input type="text" id="buyer_wallet" name="buyer_wallet" value="{{.User.Wallet}}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn">Stake Funds in Escrow</button>
+                        </div>
+                    </form>
+                    
+                    <div class="escrow-info">
+                        <h3>How Our Escrow System Works</h3>
+                        <ol>
+                            <li>You stake your funds in our secure escrow contract</li>
+                            <li>The seller ships your products</li>
+                            <li>You scan the QR code upon delivery to confirm receipt</li>
+                            <li>The funds are automatically released to the seller</li>
+                            <li>If there's an issue, you can raise a dispute</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>&copy; 2025 Delivery Escrow System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
