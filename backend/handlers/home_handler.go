@@ -36,7 +36,7 @@ func Index() http.HandlerFunc {
 		}
 
 		// Parse template
-		tmpl, err := template.ParseFiles("templates/home.html")
+		tmpl, err := template.ParseFiles("backend/templates/home.html")
 		if err != nil {
 			http.Error(w, "Failed to load template", http.StatusInternalServerError)
 			return
