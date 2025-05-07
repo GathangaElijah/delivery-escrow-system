@@ -5,6 +5,8 @@ A blockchain-based escrow system for secure e-commerce transactions, ensuring sa
 ## Problem Statement
 
 E-commerce transactions often suffer from trust issues between buyers and sellers:
+Scammers take this advantage and sell fake products and the buyer ends up losing money
+and gets frustrated while the products brand gets tarnished.
 
 - Buyers risk paying for products that never arrive or don't match descriptions or even get scammed.
 - Sellers risk shipping products without receiving payment
@@ -70,7 +72,7 @@ The escrow smart contract (written in Rust using ink!) handles:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/delivery-escrow-system.git
+git clone https://github.com/GathangaElijah/delivery-escrow-system.git
 cd delivery-escrow-system
 ```
 
@@ -106,8 +108,19 @@ delivery-escrow-system/
 
 1. **Purchase Flow**:
    - Buyer selects products and proceeds to checkout
+   ![Homepage](./DES/DesHomepage.png)
+
+   ![Checkout](./DES/DesAddToCart.png)
+
    - Buyer's funds are held in the escrow smart contract
-   - Seller is notified of the purchase
+    ![Staking funds](./DES/DesProceedToCheckout.png)
+    ![Deposit Funds](./DES/DesStakedFunds.png)
+
+   - Seller is notified of the purchase and Prepares the product for shipment
+    ![Seller Dashboard](./DES/DesSellerDashboard.png)
+   
+   - Seller prepares the product for shipment
+    ![Homepage](./DES/DesShipment.png)
 
 2. **Delivery Flow**:
    - Seller prepares the shipment with a unique QR code
@@ -123,6 +136,8 @@ delivery-escrow-system/
    - Buyer can raise a dispute if the product is unsatisfactory
    - Dispute resolution process is initiated
    - Funds are held until the dispute is resolved
+
+(**Other parts are coming soon**)
 
 ## Security Considerations
 
@@ -145,8 +160,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the GPL License - see the LICENSE file for details.
 
 ## Contact
 
-For questions or support, please contact [your-email@example.com](mailto:your-email@example.com).
+For questions or support, please contact [Elijah Gathanga](elyg3672@gmail.com).
