@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"strings"
 
-	"des/handlers"
+	"des/backend/handlers"
 )
 
 // openBrowser tries to open the URL in the default browser
@@ -35,7 +35,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	// Serve static files
-	files_handler := http.FileServer(http.Dir("../static"))
+	files_handler := http.FileServer(http.Dir("./backend/static"))
 	mux.Handle("/static/", http.StripPrefix("/static", files_handler))
 
 	// Home page
