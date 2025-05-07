@@ -1,4 +1,5 @@
 # Delivery Escrow System (DES)
+![Supply Chain Diagram](/DES/DesSupplychain.jpg)
 
 A blockchain-based escrow system for secure e-commerce transactions, ensuring safe delivery and payment for all parties involved.
 
