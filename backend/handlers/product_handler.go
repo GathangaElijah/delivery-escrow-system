@@ -34,7 +34,7 @@ func GetProduct() http.HandlerFunc {
             Name:        fmt.Sprintf("Product %s", productID),
             Description: fmt.Sprintf("Detailed description for product %s. This product is part of our premium collection.", productID),
             Price:       99.99 + (float64(len(productID)) * 10), // Just a mock price calculation
-            ImageURL:    fmt.Sprintf("/static/img/product%s.jpg", productID),
+            ImageURL:    fmt.Sprintf("/static/images/product%s.jpg", productID),
         }
         
         data := ProductData{
@@ -43,7 +43,7 @@ func GetProduct() http.HandlerFunc {
         }
         
         // Parse template
-        tmpl, err := template.ParseFiles(filepath.Join("templates", "product.html"))
+        tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "product.html"))
         if err != nil {
             http.Error(w, "Failed to load template", http.StatusInternalServerError)
             return

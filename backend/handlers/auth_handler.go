@@ -45,7 +45,7 @@ func RegisterBuyer() http.HandlerFunc {
 				Role:  "buyer",
 			}
 
-			tmpl, err := template.ParseFiles(filepath.Join("templates", "buyer_registration_form.html"))
+			tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "buyer_registration_form.html"))
 			if err != nil {
 				http.Error(w, "Failed to load template", http.StatusInternalServerError)
 				return
@@ -103,7 +103,7 @@ func RegisterBuyer() http.HandlerFunc {
 					Role:  "buyer",
 				}
 
-				tmpl, err := template.ParseFiles(filepath.Join("templates", "buyer_registration_form.html"))
+				tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "buyer_registration_form.html"))
 				if err != nil {
 					http.Error(w, "Failed to load template", http.StatusInternalServerError)
 					return
@@ -152,7 +152,7 @@ func RegisterSeller() http.HandlerFunc {
 				Role:  "seller",
 			}
 
-			tmpl, err := template.ParseFiles(filepath.Join("templates", "seller_registration_form.html"))
+			tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "seller_registration_form.html"))
 			if err != nil {
 				http.Error(w, "Failed to load template", http.StatusInternalServerError)
 				return
@@ -224,7 +224,7 @@ func RegisterSeller() http.HandlerFunc {
 					Role:  "seller",
 				}
 
-				tmpl, err := template.ParseFiles(filepath.Join("templates", "seller_registration_form.html"))
+				tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "seller_registration_form.html"))
 				if err != nil {
 					http.Error(w, "Failed to load template", http.StatusInternalServerError)
 					return
@@ -266,7 +266,7 @@ func RegisterTransporter() http.HandlerFunc {
 				Role:  "transporter",
 			}
 
-			tmpl, err := template.ParseFiles(filepath.Join("templates", "transporter_registration_form.html"))
+			tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "transporter_registration_form.html"))
 			if err != nil {
 				http.Error(w, "Failed to load template", http.StatusInternalServerError)
 				return
@@ -329,7 +329,7 @@ func RegisterTransporter() http.HandlerFunc {
 					Role:  "transporter",
 				}
 
-				tmpl, err := template.ParseFiles(filepath.Join("templates", "transporter_registration_form.html"))
+				tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "transporter_registration_form.html"))
 				if err != nil {
 					http.Error(w, "Failed to load template", http.StatusInternalServerError)
 					return
@@ -388,7 +388,7 @@ func Login() http.HandlerFunc {
 				Error: "",
 			}
 
-			tmpl, err := template.ParseFiles(filepath.Join("templates", "login.html"))
+			tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "login.html"))
 			if err != nil {
 				http.Error(w, "Failed to load template", http.StatusInternalServerError)
 				return
@@ -435,7 +435,7 @@ func Login() http.HandlerFunc {
 				Error: "Invalid email or password",
 			}
 
-			tmpl, err := template.ParseFiles(filepath.Join("templates", "login.html"))
+			tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "login.html"))
 			if err != nil {
 				http.Error(w, "Failed to load template", http.StatusInternalServerError)
 				return

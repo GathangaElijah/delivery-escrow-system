@@ -27,7 +27,7 @@ func Index() http.HandlerFunc {
 		products := []Product{
 			{ID: "1", Name: "Eton Pauls Shirt", Description: "The most expensive shirt", Price: 4000.00, ImageURL: "/static/images/Eton-Pauls-Shirt.jpg"},
 			{ID: "2", Name: "Rolex Watch", Description: "Expensive watch", Price: 10000.99, ImageURL: "/static/images/expensive-watch.jpeg"},
-			{ID: "3", Name: "Nike Air Max", Description: "Expensive shoe", Price: 1999.99, ImageURL: "/static/images/original-nike-air.jpg"},
+			{ID: "3", Name: "Nike Air Max", Description: "Expensive shoe", Price: 1999.99, ImageURL: "/static/images/original-nike-air-max.jpg"},
 		}
 
 		data := IndexData{
