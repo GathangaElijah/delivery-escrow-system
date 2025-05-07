@@ -25,9 +25,9 @@ func Index() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Sample products - in a real app, these would come from a database
 		products := []Product{
-			{ID: "1", Name: "Product 1", Description: "Description for product 1", Price: 99.99, ImageURL: "/static/img/product1.jpg"},
-			{ID: "2", Name: "Product 2", Description: "Description for product 2", Price: 149.99, ImageURL: "/static/img/product2.jpg"},
-			{ID: "3", Name: "Product 3", Description: "Description for product 3", Price: 199.99, ImageURL: "/static/img/product3.jpg"},
+			{ID: "1", Name: "Eton Pauls Shirt", Description: "The most expensive shirt", Price: 4000.00, ImageURL: "/static/images/Eton-Pauls-Shirt.jpg"},
+			{ID: "2", Name: "Rolex Watch", Description: "Expensive watch", Price: 10000.99, ImageURL: "/static/images/expensive-watch.jpeg"},
+			{ID: "3", Name: "Nike Air Max", Description: "Expensive shoe", Price: 1999.99, ImageURL: "/static/images/original-nike-air.jpg"},
 		}
 
 		data := IndexData{
