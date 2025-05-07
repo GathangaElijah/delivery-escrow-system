@@ -76,13 +76,12 @@ cd delivery-escrow-system
 
 2. Install dependencies:
 ```bash
-cd backend
 go mod download
 ```
 
 3. Run the application:
 ```bash
-go run cmd/main.go
+go run ./backend/cmd/main.go
 ```
 
 4. Access the application at `http://localhost:8080`
