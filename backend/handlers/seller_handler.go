@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"crypto/sha256"
-	"des/blockchain"
+	"des/backend/blockchain"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
