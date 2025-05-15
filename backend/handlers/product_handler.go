@@ -43,7 +43,7 @@ func GetProduct() http.HandlerFunc {
         }
         
         // Parse template
-        tmpl, err := template.ParseFiles(filepath.Join("templates", "product.html"))
+        tmpl, err := template.ParseFiles(filepath.Join("backend/templates", "product.html"))
         if err != nil {
             http.Error(w, "Failed to load template", http.StatusInternalServerError)
             return

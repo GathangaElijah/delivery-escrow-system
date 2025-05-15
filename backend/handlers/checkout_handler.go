@@ -55,7 +55,7 @@ func Checkout() http.HandlerFunc {
 				User:    user,
 			}
 
-			tmpl, err := template.ParseFiles("templates/checkout.html")
+			tmpl, err := template.ParseFiles("backend/templates/checkout.html")
 			if err != nil {
 				http.Error(w, "Failed to load template", http.StatusInternalServerError)
 				return
@@ -88,7 +88,7 @@ func Checkout() http.HandlerFunc {
 			User:      user,
 		}
 
-		tmpl, err := template.ParseFiles("templates/checkout_cart.html")
+		tmpl, err := template.ParseFiles("backend/templates/checkout_cart.html")
 		if err != nil {
 			http.Error(w, "Failed to load template", http.StatusInternalServerError)
 			return
@@ -255,7 +255,7 @@ func ProcessCheckout() http.HandlerFunc {
 // CheckoutConfirmation handles the checkout confirmation page
 func CheckoutConfirmation() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		tmpl, err := template.ParseFiles("templates/checkout_confirmation.html")
+		tmpl, err := template.ParseFiles("backend/templates/checkout_confirmation.html")
 		if err != nil {
 			http.Error(w, "Failed to load template", http.StatusInternalServerError)
 			return

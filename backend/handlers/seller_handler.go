@@ -261,7 +261,7 @@ func SellerDashboard() http.HandlerFunc {
 		}
 
 		// Parse template
-		tmpl, err := template.ParseFiles("templates/seller_dashboard.html")
+		tmpl, err := template.ParseFiles("backend/templates/seller_dashboard.html")
 		if err != nil {
 			// Try alternative path
 			tmpl, err = template.ParseFiles("backend/templates/seller_dashboard.html")
