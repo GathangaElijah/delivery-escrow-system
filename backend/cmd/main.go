@@ -31,9 +31,8 @@ func openBrowser(url string) {
 }
 
 func main() {
-	mux := http.NewServeMux()
+	mux := multiplexer.Multiplexer()
 
-	multiplexer.Multiplexer()
 	// Define server address
 	addr := ":8080"
 	url := fmt.Sprintf("http://localhost%s", addr)
