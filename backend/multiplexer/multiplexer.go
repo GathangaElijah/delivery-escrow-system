@@ -7,15 +7,15 @@ import (
 )
 
 // Here we are registering all incoming request patterns.
-func Multiplexer() {
+func Multiplexer() *http.ServeMux{
 	mux := http.NewServeMux()
 
 	// Serve static files
-	files_handler := http.FileServer(http.Dir("../static"))
+	files_handler := http.FileServer(http.Dir("./backend/static"))
 	mux.Handle("/static/", http.StripPrefix("/static", files_handler))
 
 	// Home page
-	mux.Handle("/", handlers.Index())
+	mux.HandleFunc("/", handlers.Index())
 
 	// Product detail page
 	mux.Handle("/product/", handlers.GetProduct())
@@ -64,4 +64,5 @@ func Multiplexer() {
 	mux.Handle("/debug/add-product2", handlers.AddProduct2ToCart())
 	mux.Handle("/test/cart", handlers.TestCart())
 
+	return mux
 }
