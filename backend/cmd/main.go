@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	"des/backend/multiplexer"
+	"des/backend/api/v1"
 )
 
 // openBrowser tries to open the URL in the default browser
