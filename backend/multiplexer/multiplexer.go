@@ -1,7 +1,7 @@
 package multiplexer
 
 import (
-	"des/backend/handlers"
+	"des/backend/internal"
 	"net/http"
 	"strings"
 )
