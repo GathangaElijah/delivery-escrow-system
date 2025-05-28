@@ -1,8 +1,8 @@
-package handlers
+package internal
 
 import (
 	"crypto/sha256"
-	"des/backend/blockchain"
+	"des/backend/internal/blockchain"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"

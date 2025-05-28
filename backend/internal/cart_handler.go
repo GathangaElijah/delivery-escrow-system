@@ -1,4 +1,4 @@
-package handlers
+package internal
 
 import (
 	"encoding/base64"
