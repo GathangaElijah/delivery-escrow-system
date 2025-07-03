@@ -20,10 +20,13 @@ function Login() {
   async function handleSubmit(event){
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/login', {
+      const response = await fetch('http://localhost:5001/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ 
+          email: formData.email, 
+          password: formData.password, 
+        })
       });
 
       const data = await response.json();
@@ -36,6 +39,7 @@ function Login() {
       } else {
         console.error('Login failed:', data.message);
       }
+      setFormData({email:"", password:""});
 
     } catch(error){
       console.log(error);
