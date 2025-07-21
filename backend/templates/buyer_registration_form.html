@@ -47,7 +47,7 @@
             padding: 10px;
             background-color: #f8d7da;
             border-radius: 4px;
-            display: {{if .Error}}block{{else}}none{{end}};
+            /* display: {{if .Error}}block{{else}}none{{end}}; */
         }
         
         .wallet-info {
@@ -99,27 +99,12 @@
             </div>
             
             <div class="form-container">
-                <form action="/register/buyer" method="POST">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    
+                <form action="/internal/auth/buyer" method="POST">                    
                     <div class="form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" name="email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="wallet">Nova Wallet Address</label>
-                        <input type="text" id="wallet" name="wallet" placeholder="e.g., 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="shipping_address">Shipping Address</label>
-                        <input type="text" id="shipping_address" name="shipping_address" required>
-                    </div>
-                    
+                    </div>  
+                                      
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" required>
@@ -129,13 +114,7 @@
                         <label for="confirm_password">Confirm Password</label>
                         <input type="password" id="confirm_password" name="confirm_password" required>
                     </div>
-                    
-                    <div class="wallet-info">
-                        <h4>Why do we need your wallet address?</h4>
-                        <p>Your Nova wallet address is required to interact with our blockchain-based escrow system. This allows us to securely hold funds during transactions and release them when delivery is confirmed.</p>
-                        <p>Don't have a Nova wallet? <a href="https://novawallet.io/" target="_blank">Create one here</a>.</p>
-                    </div>
-                    
+                                    
                     <div class="error-message">
                         {{.Error}}
                     </div>
