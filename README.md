@@ -1,6 +1,6 @@
 # Project Name
 
-# Delivery Escrow System (DES)
+## Delivery Escrow System (DES)
 ![Supply Chain Diagram](/DES/DesSupplychain.jpg)
 
 A blockchain-based escrow system for secure e-commerce,freelancing and other service providers transactions, and prevent clients from fraud and scams.
@@ -16,7 +16,7 @@ A blockchain-based escrow system for secure e-commerce,freelancing and other ser
 - [Overview](#-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
+- [Installation](#installation)
 - [Usage](#-usage)
 - [API Reference](#-api-reference) _(optional)_
 - [Contributing](#-contributing)
@@ -66,6 +66,11 @@ This is a **trustless payments protocol** that holds money and releases it once 
 ---
 
 ## 🛠️ Installation
+
+### Prerequisites
+- Go 1.22 or higher
+- Web browser
+- Access to contracts.onpop.io (for blockchain interaction)
 
 ````bash
 # Clone the repo
@@ -123,34 +128,6 @@ The escrow smart contract (written in Rust using ink!) handles:
 - Dispute handling
 - Refund processing
 
-## Getting Started
-
-### Prerequisites
-- Go 1.22 or higher
-- Web browser
-- Access to contracts.onpop.io (for blockchain interaction)
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/GathangaElijah/delivery-escrow-system.git
-cd delivery-escrow-system
-````
-
-2. Install dependencies:
-
-```bash
-go mod download
-```
-
-3. Run the application:
-
-```bash
-go run ./backend/cmd/main.go
-```
-
-4. Access the application at `http://localhost:5001`
 
 ## Project Structure
 
@@ -168,24 +145,24 @@ delivery-escrow-system/
 └── README.md
 ```
 
+````
 ## How It Works
 
 1. **Purchase Flow**:
 
-   - Buyer selects products and proceeds to checkout
-     ![Homepage](./DES/DesHomepage.png)
+- Buyer selects products and proceeds to checkout
+![Homepage](./DES/DesHomepage.png)
+![Checkout](./DES/DesAddToCart.png)
 
-   ![Checkout](./DES/DesAddToCart.png)
+- Buyer's funds are held in the escrow smart contract
+![Staking funds](./DES/DesProceedToCheckout.png)
+![Deposit Funds](./DES/DesStakedFunds.png)
 
-   - Buyer's funds are held in the escrow smart contract
-     ![Staking funds](./DES/DesProceedToCheckout.png)
-     ![Deposit Funds](./DES/DesStakedFunds.png)
+- Seller is notified of the purchase and Prepares the product for shipment
+![Seller Dashboard](./DES/DesSellerDashboard.png)
 
-   - Seller is notified of the purchase and Prepares the product for shipment
-     ![Seller Dashboard](./DES/DesSellerDashboard.png)
-
-   - Seller prepares the product for shipment
-     ![Homepage](./DES/DesShipment.png)
+- Seller prepares the product for shipment
+![Homepage](./DES/DesShipment.png)
 
 2. **Delivery Flow**:
 
