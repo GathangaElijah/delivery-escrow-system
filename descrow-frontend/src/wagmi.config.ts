@@ -4,6 +4,12 @@ import { walletConnect, injected } from 'wagmi/connectors'
 
 import { projectId } from './constants'
 
+// Global configuration of typescript
+declare module 'wagmi' {
+  interface Register {
+    config: typeof wagmiConfig
+  }
+}
 
 export const wagmiConfig = createConfig({
   chains: [mainnet, sepolia],
