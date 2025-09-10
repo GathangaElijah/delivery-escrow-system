@@ -1,0 +1,24 @@
+[package]
+name = "escrow_system_contract"
+version = "0.1.0"
+authors = ["[Elijah Gathanga] <[gathangaelijah@gmail.com]>"]
+edition = "2021"
+
+[dependencies]
+ink = { git = "https://github.com/use-ink/ink.git", tag = "v6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+
+[dev-dependencies]
+ink_e2e = { git = "https://github.com/use-ink/ink.git", tag = "v6.0.0-alpha", default-features = false }
+
+
+[lib]
+name = "escrow_system_contract"
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = [
+    "ink/std",
+]
+ink-as-dependency = []
+e2e-tests = []
