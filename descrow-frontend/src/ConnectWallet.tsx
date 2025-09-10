@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useConnect, useDisconnect, useAccount } from 'wagmi'
-import { injected } from 'wagmi/connectors'
+// import { injected } from 'wagmi/connectors'
 
 export default function WalletConnect() {
   const { connect, connectors, isPending } = useConnect()
