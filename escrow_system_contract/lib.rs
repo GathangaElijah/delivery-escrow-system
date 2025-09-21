@@ -51,7 +51,7 @@ mod escrow_system_contract {
         /// We test a simple use case of our contract.
         #[ink::test]
         fn it_works() {
-            let mut escrow_system_contract = EscrowSystemContract::new(false);
+            let mut escrow_system_contract = EscrowSystemContract::new();
             assert_eq!(escrow_system_contract.get(), false);
             escrow_system_contract.flip();
             assert_eq!(escrow_system_contract.get(), true);
