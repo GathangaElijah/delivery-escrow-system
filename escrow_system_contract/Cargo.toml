@@ -6,6 +6,7 @@ edition = "2021"
 
 [dependencies]
 ink = { git = "https://github.com/use-ink/ink.git", tag = "v6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+scale-info = { version = "2", default-features = false, features = ["derive"] }
 
 [dev-dependencies]
 ink_e2e = { git = "https://github.com/use-ink/ink.git", tag = "v6.0.0-alpha", default-features = false }
