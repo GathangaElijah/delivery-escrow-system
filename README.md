@@ -14,7 +14,8 @@ A blockchain-based escrow system for secure e-commerce,freelancing and other ser
 ## 📌 Table of Contents
 
 - [Overview](#-overview)
-- [Features](#-features)
+- [Problem Statement](#-problem-statement)
+- [Solution](#-solution)
 - [Tech Stack](#-tech-stack)
 - [Getting Started](#-getting-started)
 - [Usage](#-usage)
@@ -27,39 +28,26 @@ A blockchain-based escrow system for secure e-commerce,freelancing and other ser
 
 ## 📖 Overview
 
-Most of the time when you are doing business, you will do it with someone you don't know. This brings trust issues especially when it involves monetary transactions. An example of someone who needs to have their products transported to another location, needs assuarance that the goods will arrive safely and securely. To ensure this, you would have to rely on someone you trust. This can be inconvinient when they don't show up. You have to look for other options. In your head you have various questions;
-1. Will my product get to the destination safely and securely?
-2. How will I know the product has arrived?
-3. How would I know the credit score of this new transporter?
-and so much more. 
-This brings in a risk of losing both money and product. This is where DES comes in, 
-This is a **trustless payments protocol** that holds money and releases it once the the agreement has been fulfilled. There is no risk of losing money. You are in control. Incase of any dispute, a resolution is sorted and the transaction succeds.
+The **Descrow Payment Protocol** is a blockchain-based escrow mechanism that ensures secure and transparent online transactions between buyers and sellers. It eliminates the risk of scams by only releasing funds when the buyer confirms successful delivery. The protocol is designed to provide decentralized trust, removing the need for intermediaries in peer-to-peer commerce.
 
 ---
 
-## ✨ Features
-
-- Dual confirmation for delivery
-- Proof-of-delivery hash validation
-- REST API for off-chain interaction
-- Wallet integration (MetaMask, Polkadot.js)
-- Built-in conflict resolution logic
-- Holds buyer funds in a secure escrow contract
-- Releases funds only when delivery is made and the correct prosuct is delivered.
-- Distributes payments automatically (to the seller, to the transporter)
-- Provides dispute resolution for problematic transactions
-- Uses QR code scanning for proof of delivery
-
+## Problem Statement
+Online transactions often suffer from **scams and fraud**, particularly through **seller impersonation traps**—where unsuspecting buyers send payments to fake sellers who disappear after receiving the funds. Traditional online payment systems lack a verifiable way to ensure that products are delivered before funds are released, leading to widespread mistrust in digital marketplaces.
 
 ---
 
+## Solution
+Descrow introduces a **smart contract-based payment protocol** that safely holds the buyer’s payment in escrow until the product’s delivery is confirmed. Both buyer and seller are onboarded and verified on-chain. Once the buyer confirms receipt of goods (and product authenticity is verified), the funds are automatically released to the seller.
+
+---
 ## ⚙️ Tech Stack
 
 | Layer          | Technology                |
 | -------------- | ------------------------- |
 | Smart Contract | Rust, ink!                |
-| Backend        | Go (net/http)             |
-| Frontend       | React  |
+| Backend        | Rust          
+| Frontend       | React, Typescript
 | Blockchain     | Polkadot (Substrate)      |
 | Other Tools    | Docker, Git, curl         |
 
@@ -67,163 +55,36 @@ This is a **trustless payments protocol** that holds money and releases it once 
 
 ## 🛠️ Installation
 
-````bash
-# Clone the repo
-git clone https://github.com/GathangaElijah/delivery-escrow-system.git
-cd elivery-escrow-system
-
-# Set up backend
-go run ./backend/cmd/
-
-# For smart contracts (Ink!)
-cd delivery-escrow-contract
-cargo contract build
-cargo contract deploy
-
-# Frontend setup (if applicable)
-cd descrow-frontend
-npm install
-npm run dev
-
-
-## Technology Stack
-
-- **Frontend**: HTML, CSS, JavaScript(react)
-- **Backend**: Go (Golang)
-- **Blockchain**: Substrate/Polkadot (Rust smart contracts)
-- **Smart Contract**: Deployed on contracts.onpop.io
-
-## Key Features
-
-### For Buyers
-- Browse and purchase products with escrow protection
-- Track order status in real-time
-- Confirm delivery by scanning QR codes
-- Raise disputes for unsatisfactory deliveries
-
-### For Sellers
-- List products for sale
-- Track order and payment status
-- Receive automatic payments upon delivery confirmation
-- Participate in dispute resolution
-
-### For Transporters
-- Accept delivery assignments
-- Submit proof of delivery
-- Receive automatic commission upon successful delivery
-
-## Smart Contract Architecture
-
-The escrow smart contract (written in Rust using ink!) handles:
-
-- Fund deposits from buyers
-- Proof of delivery submission
-- Delivery confirmation
-- Automatic fund distribution (to the seller, to the transporter)
-- Dispute handling
-- Refund processing
-
-## Getting Started
-
-### Prerequisites
-- Go 1.22 or higher
-- Web browser
-- Access to contracts.onpop.io (for blockchain interaction)
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/GathangaElijah/delivery-escrow-system.git
-cd delivery-escrow-system
-````
-
-2. Install dependencies:
-
-```bash
-go mod download
-```
-
-3. Run the application:
-
-```bash
-go run ./backend/cmd/main.go
-```
-
-4. Access the application at `http://localhost:5001`
-
 ## Project Structure
 
-```
-delivery-escrow-system/
-├── backend/
-│   ├── blockchain/       # Blockchain interaction code
-│   ├── cmd/              # Application entry points
-│   ├── handlers/         # HTTP request handlers
-│   ├── static/           # Static assets (CSS, JS, images)
-│   └── templates/        # HTML templates
-├── delivery-escrow-contract/
-│   ├── lib.rs            # Smart contract code
-│   └── Cargo.toml        # Rust dependencies
-└── README.md
-```
+## Workflow
+1. Buyer connects their crypto wallet to Descrow.
+2. Buyer creates a purchase order and stakes payment into the escrow.
+3. Seller accepts the order and dispatches the product.
+4. Product tracking and seal verification (if applicable) are logged to ensure authenticity.
+5. Buyer confirms receipt → funds are released to the seller.
+6. If there’s a complaint → the transaction enters conflict resolution.
 
-## How It Works
+## Conflict Resolution
+If the buyer reports a complaint (e.g., undelivered or tampered goods), the system triggers a **dispute resolution process**:
+- The funds remain locked in escrow.
+- Both parties submit evidence (e.g., delivery logs, product hashes, or proof of shipment).
+- A **trusted arbitrator or decentralized resolution protocol** reviews the claim.
+- Based on the verdict, funds are either refunded to the buyer or released to the seller.
 
-1. **Purchase Flow**:
 
-   - Buyer selects products and proceeds to checkout
-     ![Homepage](./DES/DesHomepage.png)
-
-   ![Checkout](./DES/DesAddToCart.png)
-
-   - Buyer's funds are held in the escrow smart contract
-     ![Staking funds](./DES/DesProceedToCheckout.png)
-     ![Deposit Funds](./DES/DesStakedFunds.png)
-
-   - Seller is notified of the purchase and Prepares the product for shipment
-     ![Seller Dashboard](./DES/DesSellerDashboard.png)
-
-   - Seller prepares the product for shipment
-     ![Homepage](./DES/DesShipment.png)
-
-2. **Delivery Flow**:
-
-   - Seller prepares the shipment with a unique QR code
-   - Transporter picks up and delivers the package
-   - Buyer scans QR code upon receipt to confirm delivery
-
-3. **Payment Flow**:
-
-   - Smart contract automatically releases funds upon delivery confirmation
-   - 90% goes to the seller, 10% to the transporter
-   - All transactions are recorded on the blockchain
-
-4. **Dispute Resolution**:
-   - Buyer can raise a dispute if the product is unsatisfactory
-   - Dispute resolution process is initiated
-   - Funds are held until the dispute is resolved
-
-(**Other parts are coming soon**)
-
-## Security Considerations
-
-- All funds are held in a secure smart contract, not by any single party
-- Proof of delivery is cryptographically verified
-- Transactions are immutable and transparent on the blockchain
-- User authentication protects account access
+## Security Measures
+- **Immutable Escrow Contracts**: Funds are handled by smart contracts only.
+- **Double Verification**: Delivery and authenticity checks before releasing funds.
+- **Tamper Detection**: Optional QR seal verification for physical goods.
+- **No Central Custodian**: All logic is handled on-chain.
 
 ## Future Enhancements
+- **Cross-Network Wallet Support** (MetaMask, Lisk, Stellar, etc.)
+- **Automated Dispute Arbitration** using decentralized governance.
+- **AI-Powered Fraud Detection** to prevent impersonation or fake listings.
 
-- Mobile application for easier QR code scanning
-- Integration with major e-commerce platforms
-- Multi-signature approval for high-value transactions
-- AI-powered dispute resolution
-- Support for multiple cryptocurrencies and stablecoins
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+---
 
 ## License
 
@@ -231,4 +92,7 @@ This project is licensed under the GPL License - see the [LICENSE](./LICENSE) fi
 
 ## Contact
 
-For questions or support, please contact [Elijah Gathanga](elyg3672@gmail.com).
+For questions or support, please contact [Elijah Gathanga](elyg3672@gmail.com). <br>
+© 2025 Descrow Labs. All rights reserved.
+
+
